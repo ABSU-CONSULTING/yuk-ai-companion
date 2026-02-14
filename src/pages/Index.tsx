@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { PanelLeft } from "lucide-react";
+import { PanelLeft, Share, Ellipsis } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { MessageBubble } from "@/components/chat/MessageBubble";
@@ -23,6 +23,9 @@ const Index = () => {
     createConversation,
     deleteConversation,
     sendMessage,
+    projects,
+    createProject,
+    deleteProject,
   } = useChat();
 
   const messages = activeConversation?.messages || [];
@@ -31,43 +34,47 @@ const Index = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isGenerating]);
 
-  const handleSend = (content: string) => {
-    sendMessage(content);
-  };
-
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-background">
       <ChatSidebar
         conversations={conversations}
-        activeId={activeConversationId}
+        projects={projects}
+        activeId={activeConversationId || ""}
         onSelect={setActiveConversationId}
         onCreate={createConversation}
         onDelete={deleteConversation}
+        onCreateProject={createProject}
+        onDeleteProject={deleteProject}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(false)}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex items-center justify-between px-4 py-3 border-b border-border">
-          <div className="flex items-center gap-2">
+        <header className="flex items-center justify-between px-4 h-12 border-b border-border bg-background/80 glass-effect sticky top-0 z-10">
+          <div className="flex items-center gap-1">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-lg hover:bg-accent text-muted-foreground transition-colors"
+                className="p-2 rounded-xl hover:bg-accent text-muted-foreground transition-colors"
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
             )}
             <ModelSelector value={selectedModel} onChange={setSelectedModel} />
           </div>
+          <div className="flex items-center gap-1">
+            <button className="p-2 rounded-xl hover:bg-accent text-muted-foreground transition-colors">
+              <Share className="w-4 h-4" />
+            </button>
+          </div>
         </header>
 
         {/* Messages */}
         {messages.length === 0 && !isGenerating ? (
-          <EmptyState onSuggestion={handleSend} />
+          <EmptyState onSuggestion={(text) => sendMessage(text)} />
         ) : (
-          <div className="flex-1 overflow-y-auto scrollbar-thin py-6 space-y-4">
+          <div className="flex-1 overflow-y-auto scrollbar-thin py-6 space-y-3">
             {messages.map((msg) => (
               <MessageBubble key={msg.id} message={msg} />
             ))}
@@ -77,7 +84,7 @@ const Index = () => {
         )}
 
         {/* Input */}
-        <ChatInput onSend={handleSend} disabled={isGenerating} />
+        <ChatInput onSend={sendMessage} disabled={isGenerating} />
       </div>
     </div>
   );

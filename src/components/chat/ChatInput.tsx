@@ -1,14 +1,22 @@
 import { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { Send, Paperclip, X, FileText, Image as ImageIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface AttachedFile {
+  file: File;
+  id: string;
+}
 
 interface ChatInputProps {
-  onSend: (message: string) => void;
+  onSend: (message: string, attachments?: { name: string; type: string; size: number }[]) => void;
   disabled?: boolean;
 }
 
 export function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [value, setValue] = useState("");
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -19,9 +27,17 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   const handleSubmit = () => {
     const trimmed = value.trim();
-    if (!trimmed || disabled) return;
-    onSend(trimmed);
+    if ((!trimmed && attachedFiles.length === 0) || disabled) return;
+
+    const attachments = attachedFiles.map((af) => ({
+      name: af.file.name,
+      type: af.file.type,
+      size: af.file.size,
+    }));
+
+    onSend(trimmed || "Sent file(s)", attachments.length > 0 ? attachments : undefined);
     setValue("");
+    setAttachedFiles([]);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -31,9 +47,62 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newAttachments = files.map((file) => ({
+      file,
+      id: Math.random().toString(36).slice(2, 8),
+    }));
+    setAttachedFiles((prev) => [...prev, ...newAttachments]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeFile = (id: string) => {
+    setAttachedFiles((prev) => prev.filter((f) => f.id !== id));
+  };
+
   return (
-    <div className="max-w-3xl mx-auto w-full px-4 pb-4">
-      <div className="flex items-end gap-2 bg-secondary rounded-2xl border border-border p-2 focus-within:ring-1 focus-within:ring-primary/50 transition-shadow">
+    <div className="max-w-3xl mx-auto w-full px-4 pb-5 pt-2">
+      {/* Attached files preview */}
+      {attachedFiles.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {attachedFiles.map((af) => (
+            <div
+              key={af.id}
+              className="flex items-center gap-2 px-3 py-1.5 bg-accent rounded-xl text-xs border border-border"
+            >
+              {af.file.type.startsWith("image/") ? (
+                <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
+              ) : (
+                <FileText className="w-3.5 h-3.5 text-muted-foreground" />
+              )}
+              <span className="truncate max-w-[120px]">{af.file.name}</span>
+              <button onClick={() => removeFile(af.id)} className="hover:text-destructive">
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-end gap-2 bg-card border border-border rounded-2xl p-2 shadow-sm focus-within:shadow-md focus-within:border-foreground/15 transition-all">
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileSelect}
+          accept="image/*,.pdf,.txt,.md,.csv,.json,.py,.js,.ts,.tsx,.jsx"
+        />
+
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="p-2 rounded-xl hover:bg-accent text-muted-foreground transition-colors shrink-0"
+          title="Attach files"
+        >
+          <Paperclip className="w-4 h-4" />
+        </button>
+
         <textarea
           ref={textareaRef}
           value={value}
@@ -42,18 +111,25 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           placeholder="Message YUK..."
           disabled={disabled}
           rows={1}
-          className="flex-1 bg-transparent resize-none text-sm text-foreground placeholder:text-muted-foreground outline-none px-2 py-2 max-h-40 scrollbar-thin"
+          className="flex-1 bg-transparent resize-none text-[14px] text-foreground placeholder:text-muted-foreground outline-none py-2 max-h-40 scrollbar-thin leading-relaxed"
         />
+
         <button
           onClick={handleSubmit}
-          disabled={!value.trim() || disabled}
-          className="p-2.5 rounded-xl bg-primary text-primary-foreground disabled:opacity-30 hover:opacity-90 transition-opacity shrink-0"
+          disabled={(!value.trim() && attachedFiles.length === 0) || disabled}
+          className={cn(
+            "p-2 rounded-xl transition-all shrink-0",
+            value.trim() || attachedFiles.length > 0
+              ? "bg-foreground text-background hover:opacity-80"
+              : "bg-muted text-muted-foreground"
+          )}
         >
           <Send className="w-4 h-4" />
         </button>
       </div>
-      <p className="text-center text-xs text-muted-foreground mt-2">
-        YUK runs locally via Ollama. Your data stays on your machine.
+
+      <p className="text-center text-[11px] text-muted-foreground mt-2.5">
+        YUK runs locally via Ollama · Your data never leaves your machine
       </p>
     </div>
   );
