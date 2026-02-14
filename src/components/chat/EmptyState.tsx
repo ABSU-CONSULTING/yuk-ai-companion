@@ -1,4 +1,4 @@
-import { Sparkles, Code, BookOpen, Lightbulb, Zap, PenLine } from "lucide-react";
+import { Code, BookOpen, Lightbulb, PenLine } from "lucide-react";
 
 interface EmptyStateProps {
   onSuggestion: (text: string) => void;
@@ -14,32 +14,34 @@ const suggestions = [
 export function EmptyState({ onSuggestion }: EmptyStateProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4">
-      <div className="mb-10 text-center">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent mb-5">
-          <Zap className="w-7 h-7 text-foreground" />
-        </div>
-        <h1 className="text-[28px] font-semibold tracking-tight text-foreground mb-2">
-          How can I help?
+      <div className="mb-12 text-center">
+        <h1 className="text-[42px] font-light tracking-tight text-foreground mb-1 text-glow">
+          The only move
         </h1>
-        <p className="text-muted-foreground text-sm max-w-md">
-          Ask me anything. I run locally on your machine via Ollama — fast, private, and flexible.
+        <h1 className="text-[42px] font-semibold tracking-tight text-foreground text-glow">
+          that matters.
+        </h1>
+        <p className="text-muted-foreground text-sm mt-4 max-w-sm mx-auto leading-relaxed">
+          Local AI, powered by Ollama. Private, fast, yours.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5 max-w-lg w-full">
+      <div className="grid grid-cols-2 gap-3 max-w-lg w-full">
         {suggestions.map((s) => (
           <button
             key={s.label}
             onClick={() => onSuggestion(s.text)}
-            className="flex flex-col gap-2 p-4 rounded-2xl bg-card border border-border hover:border-foreground/15 hover:shadow-sm transition-all text-left group"
+            className="flex flex-col gap-2.5 p-4 rounded-2xl bg-card subtle-border hover-lift text-left group"
           >
             <div className="flex items-center gap-2">
               <s.icon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
-              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
                 {s.label}
               </span>
             </div>
-            <span className="text-[13px] text-foreground/80 leading-snug">{s.text}</span>
+            <span className="text-[13px] text-foreground/70 leading-snug group-hover:text-foreground transition-colors">
+              {s.text}
+            </span>
           </button>
         ))}
       </div>

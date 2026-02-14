@@ -2,9 +2,9 @@ import { Bot } from "lucide-react";
 
 export function TypingIndicator() {
   return (
-    <div className="message-fade-in max-w-3xl mx-auto px-4 py-1">
+    <div className="message-fade-in max-w-3xl mx-auto px-4 py-1.5">
       <div className="flex gap-3">
-        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-accent text-foreground border border-border">
+        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-accent text-foreground subtle-border">
           <Bot className="w-3.5 h-3.5" />
         </div>
         <div className="flex-1">

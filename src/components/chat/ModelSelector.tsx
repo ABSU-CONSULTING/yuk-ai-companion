@@ -38,25 +38,25 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-medium text-foreground hover:bg-accent transition-colors"
       >
         <span>{selected.name}</span>
-        <span className="text-[11px] text-muted-foreground font-mono bg-accent px-1.5 py-0.5 rounded-md">
+        <span className="text-[10px] text-muted-foreground font-mono bg-accent px-1.5 py-0.5 rounded-md subtle-border">
           {selected.tag}
         </span>
         <ChevronDown className={cn("w-3 h-3 text-muted-foreground transition-transform", open && "rotate-180")} />
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-56 bg-popover border border-border rounded-2xl shadow-lg z-50 py-1.5 message-fade-in overflow-hidden">
+        <div className="absolute top-full left-0 mt-1.5 w-56 bg-popover subtle-border rounded-2xl shadow-2xl z-50 py-1.5 message-fade-in overflow-hidden">
           {MODELS.map((model) => (
             <button
               key={model.id}
               onClick={() => { onChange(model.id); setOpen(false); }}
               className={cn(
                 "w-full flex items-center justify-between px-4 py-2.5 text-[13px] hover:bg-accent transition-colors",
-                model.id === value ? "text-foreground font-medium" : "text-foreground/70"
+                model.id === value ? "text-foreground font-medium" : "text-muted-foreground"
               )}
             >
               <span>{model.name}</span>
-              <span className="text-[11px] text-muted-foreground font-mono">{model.tag}</span>
+              <span className="text-[10px] text-muted-foreground font-mono">{model.tag}</span>
             </button>
           ))}
         </div>

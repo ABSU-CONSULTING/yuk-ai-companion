@@ -4,10 +4,8 @@ import {
   MessageSquare,
   Trash2,
   Search,
-  FolderOpen,
   ChevronDown,
   ChevronRight,
-  MoreHorizontal,
   Settings,
 } from "lucide-react";
 import { Conversation, Project } from "@/types/chat";
@@ -80,12 +78,12 @@ export function ChatSidebar({
     <aside
       className={cn(
         "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-out overflow-hidden shrink-0",
-        isOpen ? "w-[280px]" : "w-0"
+        isOpen ? "w-[260px]" : "w-0"
       )}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4">
-        <span className="text-[15px] font-semibold tracking-tight text-foreground">YUK</span>
+        <span className="text-[15px] font-bold tracking-widest uppercase text-foreground">YUK</span>
         <button
           onClick={() => onCreate()}
           className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground transition-colors"
@@ -97,7 +95,7 @@ export function ChatSidebar({
 
       {/* Search */}
       <div className="px-3 pb-3">
-        <div className="flex items-center gap-2 px-3 py-2 bg-accent rounded-xl">
+        <div className="flex items-center gap-2 px-3 py-2 bg-accent rounded-xl subtle-border">
           <Search className="w-3.5 h-3.5 text-muted-foreground" />
           <input
             type="text"
@@ -113,7 +111,7 @@ export function ChatSidebar({
         {/* Projects */}
         <div className="mb-4">
           <div className="flex items-center justify-between px-2 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
               Projects
             </span>
             <button
@@ -133,7 +131,7 @@ export function ChatSidebar({
                 onKeyDown={(e) => e.key === "Enter" && handleCreateProject()}
                 placeholder="Project name..."
                 autoFocus
-                className="w-full px-3 py-1.5 text-sm bg-accent rounded-lg outline-none border border-border focus:border-foreground/20"
+                className="w-full px-3 py-1.5 text-sm bg-accent rounded-lg outline-none subtle-border focus:border-foreground/20 text-foreground placeholder:text-muted-foreground"
               />
             </div>
           )}
@@ -157,8 +155,8 @@ export function ChatSidebar({
                     className="w-2 h-2 rounded-full shrink-0"
                     style={{ backgroundColor: project.color }}
                   />
-                  <span className="truncate text-foreground/80 text-[13px]">{project.name}</span>
-                  <span className="ml-auto text-[11px] text-muted-foreground">
+                  <span className="truncate text-foreground/70 text-[13px]">{project.name}</span>
+                  <span className="ml-auto text-[10px] text-muted-foreground font-mono">
                     {projectConvs.length}
                   </span>
                   {project.id !== "default" && (
@@ -205,7 +203,7 @@ export function ChatSidebar({
         {/* Recent Chats */}
         {todayConversations.length > 0 && (
           <div className="mb-3">
-            <span className="px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="px-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
               Today
             </span>
             <div className="mt-1 space-y-0.5">
@@ -224,7 +222,7 @@ export function ChatSidebar({
 
         {olderConversations.length > 0 && (
           <div className="mb-3">
-            <span className="px-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="px-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
               Previous
             </span>
             <div className="mt-1 space-y-0.5">
@@ -271,7 +269,7 @@ function ConversationItem({
         "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-[13px] transition-all group",
         isActive
           ? "bg-accent text-foreground font-medium"
-          : "text-foreground/70 hover:bg-accent/60"
+          : "text-muted-foreground hover:bg-accent/60 hover:text-foreground/80"
       )}
     >
       <MessageSquare className="w-3.5 h-3.5 shrink-0 opacity-40" />
