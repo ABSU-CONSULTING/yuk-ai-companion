@@ -2,56 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 220 14% 10%;
-    --foreground: 220 10% 92%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
 
-    --card: 220 14% 13%;
-    --card-foreground: 220 10% 92%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 7%;
 
-    --popover: 220 14% 13%;
-    --popover-foreground: 220 10% 92%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
 
-    --primary: 38 92% 55%;
-    --primary-foreground: 220 14% 10%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 12% 18%;
-    --secondary-foreground: 220 10% 80%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 220 12% 16%;
-    --muted-foreground: 220 8% 55%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 220 12% 20%;
-    --accent-foreground: 220 10% 92%;
+    --accent: 0 0% 93%;
+    --accent-foreground: 0 0% 7%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 12% 20%;
-    --input: 220 12% 22%;
-    --ring: 38 92% 55%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 0 0% 0%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    --sidebar-background: 220 14% 8%;
-    --sidebar-foreground: 220 10% 75%;
-    --sidebar-primary: 38 92% 55%;
-    --sidebar-primary-foreground: 220 14% 10%;
-    --sidebar-accent: 220 12% 14%;
-    --sidebar-accent-foreground: 220 10% 92%;
-    --sidebar-border: 220 12% 16%;
-    --sidebar-ring: 38 92% 55%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 40%;
+    --sidebar-primary: 0 0% 7%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 93%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 0 0% 92%;
+    --sidebar-ring: 0 0% 0%;
 
-    --user-bubble: 38 92% 55%;
-    --user-bubble-foreground: 220 14% 10%;
-    --ai-bubble: 220 12% 16%;
-    --ai-bubble-foreground: 220 10% 92%;
+    --user-bubble: 220 100% 50%;
+    --user-bubble-foreground: 0 0% 100%;
+    --ai-bubble: 0 0% 95%;
+    --ai-bubble-foreground: 0 0% 10%;
 
-    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Menlo', monospace;
   }
 }
 
@@ -60,8 +60,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -71,37 +73,50 @@
   }
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted)) transparent;
+    scrollbar-color: hsl(0 0% 85%) transparent;
   }
   .scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
+    width: 5px;
   }
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
+    background: hsl(0 0% 85%);
     border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(0 0% 75%);
   }
 }
 
 @layer components {
   .message-fade-in {
-    animation: messageFadeIn 0.3s ease-out;
+    animation: messageFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .typing-dot {
     animation: typingBounce 1.4s ease-in-out infinite;
   }
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  .sidebar-item-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+  .sidebar-item-hover:hover {
+    @apply bg-accent;
+  }
+  .glass-effect {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
 }
 
 @keyframes messageFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes typingBounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
   40% { transform: scale(1); opacity: 1; }
 }
