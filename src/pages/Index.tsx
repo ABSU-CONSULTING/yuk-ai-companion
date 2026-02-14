@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { PanelLeft, Share, Ellipsis } from "lucide-react";
+import { PanelLeft, Share } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { MessageBubble } from "@/components/chat/MessageBubble";
@@ -51,7 +51,7 @@ const Index = () => {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex items-center justify-between px-4 h-12 border-b border-border bg-background/80 glass-effect sticky top-0 z-10">
+        <header className="flex items-center justify-between px-4 h-12 border-b border-border bg-background/60 glass-effect sticky top-0 z-10">
           <div className="flex items-center gap-1">
             {!sidebarOpen && (
               <button

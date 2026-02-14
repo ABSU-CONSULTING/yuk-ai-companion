@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, X, FileText, Image as ImageIcon } from "lucide-react";
+import { ArrowUp, Paperclip, X, FileText, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AttachedFile {
@@ -62,22 +62,21 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto w-full px-4 pb-5 pt-2">
-      {/* Attached files preview */}
+    <div className="max-w-3xl mx-auto w-full px-4 pb-6 pt-2">
       {attachedFiles.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-2">
           {attachedFiles.map((af) => (
             <div
               key={af.id}
-              className="flex items-center gap-2 px-3 py-1.5 bg-accent rounded-xl text-xs border border-border"
+              className="flex items-center gap-2 px-3 py-1.5 bg-accent rounded-xl text-xs subtle-border"
             >
               {af.file.type.startsWith("image/") ? (
                 <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
               ) : (
                 <FileText className="w-3.5 h-3.5 text-muted-foreground" />
               )}
-              <span className="truncate max-w-[120px]">{af.file.name}</span>
-              <button onClick={() => removeFile(af.id)} className="hover:text-destructive">
+              <span className="truncate max-w-[120px] text-foreground/70">{af.file.name}</span>
+              <button onClick={() => removeFile(af.id)} className="hover:text-destructive text-muted-foreground">
                 <X className="w-3 h-3" />
               </button>
             </div>
@@ -85,7 +84,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         </div>
       )}
 
-      <div className="flex items-end gap-2 bg-card border border-border rounded-2xl p-2 shadow-sm focus-within:shadow-md focus-within:border-foreground/15 transition-all">
+      <div className="flex items-end gap-2 bg-card subtle-border rounded-2xl p-2 focus-within:border-foreground/20 transition-all">
         <input
           ref={fileInputRef}
           type="file"
@@ -124,11 +123,11 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
               : "bg-muted text-muted-foreground"
           )}
         >
-          <Send className="w-4 h-4" />
+          <ArrowUp className="w-4 h-4" />
         </button>
       </div>
 
-      <p className="text-center text-[11px] text-muted-foreground mt-2.5">
+      <p className="text-center text-[10px] text-muted-foreground/60 mt-3 tracking-wide uppercase">
         YUK runs locally via Ollama · Your data never leaves your machine
       </p>
     </div>
