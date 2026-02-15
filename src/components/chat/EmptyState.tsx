@@ -14,15 +14,12 @@ const suggestions = [
 export function EmptyState({ onSuggestion }: EmptyStateProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4">
-      <div className="mb-12 text-center">
-        <h1 className="text-[42px] font-light tracking-tight text-foreground mb-1 text-glow">
-          The only move
+      <div className="mb-14 text-center">
+        <h1 className="text-[72px] font-bold tracking-tight text-primary text-glow leading-none">
+          YUK
         </h1>
-        <h1 className="text-[42px] font-semibold tracking-tight text-foreground text-glow">
-          that matters.
-        </h1>
-        <p className="text-muted-foreground text-sm mt-4 max-w-sm mx-auto leading-relaxed">
-          Local AI, powered by Ollama. Private, fast, yours.
+        <p className="text-muted-foreground text-sm mt-3 max-w-xs mx-auto leading-relaxed">
+          Your local AI assistant. Private, fast, powerful.
         </p>
       </div>
 
@@ -34,7 +31,7 @@ export function EmptyState({ onSuggestion }: EmptyStateProps) {
             className="flex flex-col gap-2.5 p-4 rounded-2xl bg-card subtle-border hover-lift text-left group"
           >
             <div className="flex items-center gap-2">
-              <s.icon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <s.icon className="w-3.5 h-3.5 text-primary/60 group-hover:text-primary transition-colors" />
               <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
                 {s.label}
               </span>
