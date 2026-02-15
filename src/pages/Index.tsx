@@ -26,6 +26,8 @@ const Index = () => {
     projects,
     createProject,
     deleteProject,
+    ollamaEndpoint,
+    updateEndpoint,
   } = useChat();
 
   const messages = activeConversation?.messages || [];
@@ -47,6 +49,8 @@ const Index = () => {
         onDeleteProject={deleteProject}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(false)}
+        ollamaEndpoint={ollamaEndpoint}
+        onUpdateEndpoint={updateEndpoint}
       />
 
       <div className="flex-1 flex flex-col min-w-0">

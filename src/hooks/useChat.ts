@@ -14,12 +14,23 @@ const DEFAULT_PROJECTS: Project[] = [
   },
 ];
 
+const DEFAULT_ENDPOINT = "http://localhost:11434";
+
 export function useChat() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState("llama3.2");
   const [isGenerating, setIsGenerating] = useState(false);
   const [projects, setProjects] = useState<Project[]>(DEFAULT_PROJECTS);
+  const [ollamaEndpoint, setOllamaEndpoint] = useState(
+    () => localStorage.getItem("yuk-ollama-endpoint") || DEFAULT_ENDPOINT
+  );
+
+  const updateEndpoint = useCallback((url: string) => {
+    const clean = url.replace(/\/+$/, "");
+    setOllamaEndpoint(clean);
+    localStorage.setItem("yuk-ollama-endpoint", clean);
+  }, []);
 
   const activeConversation = conversations.find((c) => c.id === activeConversationId) || null;
 
@@ -116,24 +127,64 @@ export function useChat() {
       );
 
       setIsGenerating(true);
-      await new Promise((r) => setTimeout(r, 1000 + Math.random() * 1000));
 
-      const aiMsg: Message = {
-        id: generateId(),
-        role: "assistant",
-        content: getSimulatedResponse(content),
-        timestamp: new Date(),
-      };
+      try {
+        const currentConv = conversations.find((c) => c.id === currentConvId);
+        const history = (currentConv?.messages || []).map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+        history.push({ role: "user", content });
 
-      setConversations((prev) =>
-        prev.map((c) => {
-          if (c.id !== currentConvId) return c;
-          return { ...c, messages: [...c.messages, aiMsg], updatedAt: new Date() };
-        })
-      );
+        const res = await fetch(`${ollamaEndpoint}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: selectedModel,
+            messages: history,
+            stream: false,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Ollama returned ${res.status}`);
+        }
+
+        const data = await res.json();
+        const aiContent = data.message?.content || "No response received.";
+
+        const aiMsg: Message = {
+          id: generateId(),
+          role: "assistant",
+          content: aiContent,
+          timestamp: new Date(),
+        };
+
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c.id !== currentConvId) return c;
+            return { ...c, messages: [...c.messages, aiMsg], updatedAt: new Date() };
+          })
+        );
+      } catch (err: any) {
+        const errorMsg: Message = {
+          id: generateId(),
+          role: "assistant",
+          content: `⚠️ **Connection failed**\n\nCouldn't reach Ollama at \`${ollamaEndpoint}\`.\n\n**To fix this:**\n1. Make sure Ollama is running on your VM\n2. Set \`OLLAMA_ORIGINS=*\` to allow CORS\n3. Update the endpoint URL in Settings with your VM's IP\n\nError: ${err.message}`,
+          timestamp: new Date(),
+        };
+
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c.id !== currentConvId) return c;
+            return { ...c, messages: [...c.messages, errorMsg], updatedAt: new Date() };
+          })
+        );
+      }
+
       setIsGenerating(false);
     },
-    [activeConversationId, selectedModel]
+    [activeConversationId, selectedModel, ollamaEndpoint, conversations]
   );
 
   return {
@@ -150,14 +201,7 @@ export function useChat() {
     projects,
     createProject,
     deleteProject,
+    ollamaEndpoint,
+    updateEndpoint,
   };
-}
-
-function getSimulatedResponse(input: string): string {
-  const responses = [
-    `Here's my take on "${input.slice(0, 30)}...":\n\nThis is a simulated response from **YUK**. Connect your Ollama backend to get real AI responses.\n\nYou can configure the API endpoint to point to your local Ollama instance running at \`localhost:11434\`.`,
-    `Great question! Let me break this down:\n\n1. **Key Insight** — YUK is your local AI interface\n2. **Privacy First** — All data stays on your machine\n3. **Model Flexibility** — Switch between any Ollama model\n\nTo get started with real responses, ensure Ollama is running locally.`,
-    `I'd love to help with that.\n\nYUK supports all Ollama models including:\n- **Llama 3.2** for general tasks\n- **CodeLlama** for programming\n- **Mistral** for reasoning\n- **Gemma** for creative writing\n\nConfigure your endpoint in settings to connect.`,
-  ];
-  return responses[Math.floor(Math.random() * responses.length)];
 }
