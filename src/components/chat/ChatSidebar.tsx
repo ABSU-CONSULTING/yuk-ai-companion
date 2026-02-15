@@ -6,9 +6,9 @@ import {
   Search,
   ChevronDown,
   ChevronRight,
-  Settings,
 } from "lucide-react";
 import { Conversation, Project } from "@/types/chat";
+import { SettingsDialog } from "./SettingsDialog";
 import { cn } from "@/lib/utils";
 
 interface ChatSidebarProps {
@@ -22,6 +22,8 @@ interface ChatSidebarProps {
   onDeleteProject: (id: string) => void;
   isOpen: boolean;
   onToggle: () => void;
+  ollamaEndpoint: string;
+  onUpdateEndpoint: (url: string) => void;
 }
 
 export function ChatSidebar({
@@ -35,6 +37,8 @@ export function ChatSidebar({
   onDeleteProject,
   isOpen,
   onToggle,
+  ollamaEndpoint,
+  onUpdateEndpoint,
 }: ChatSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set(["default"]));
@@ -242,10 +246,7 @@ export function ChatSidebar({
 
       {/* Footer */}
       <div className="p-3 border-t border-sidebar-border">
-        <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground sidebar-item-hover">
-          <Settings className="w-4 h-4" />
-          <span>Settings</span>
-        </button>
+        <SettingsDialog endpoint={ollamaEndpoint} onUpdateEndpoint={onUpdateEndpoint} />
       </div>
     </aside>
   );
